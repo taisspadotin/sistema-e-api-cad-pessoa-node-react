@@ -1,0 +1,24 @@
+$corFocus: #35bdb2;
+
+@mixin foco{
+	box-shadow: 0 0 3px $corFocus !important;
+	border-color: $corFocus !important;
+	background: lighten($corFocus, 50) !important;
+}
+.form{
+	textarea:focus{
+		@include foco;
+	}
+	input:focus{
+		@include foco;
+	}
+	
+}
+.tabela{
+	tr{
+		&:hover{
+			cursor:pointer;
+			background: lighten($corFocus, 30) !important;
+		}	
+	}
+}

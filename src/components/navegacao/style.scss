@@ -1,0 +1,40 @@
+.menu_inicial{
+	position:fixed;
+	width: 100%;
+	z-index: 9999;
+	top: 0;
+	background: #32383e !important;
+	border-radius: 0 !important;
+	a{
+		text-decoration:bold;
+		font-size:1.1em;
+		
+		color: #fff;
+		&:hover{
+			color: #35bdb2;
+		}
+	}
+	i{
+		color: #fff;
+		font-size:2em;
+	}
+	.item{
+		&::before{
+			background:none !important;
+		}
+	}
+	.active{
+		background: #dcdcdc20 !important;
+		border-radius: 10px;
+		a{
+			/*color: #35bdb2; */
+		}
+	}
+	
+}
+
+.conteudo{
+	margin-top:100px;
+	margin-left:5%;
+	margin-right:5%;
+}

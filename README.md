@@ -9,8 +9,8 @@ Quando a pessoa acessa a tela de cadastro ele mostra todos os registros cadastra
   - axios
  
  ### `Para rodar o projeto (React):`
-  npm install
-  npm start
+  - npm install
+  - npm start
   
   ### `Para rodar a API`
    Na pasta API Node:

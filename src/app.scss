@@ -1,6 +1,19 @@
+$corFocus: #35bdb2;
+
 .geral{
-	margin-top: 60px;
+	padding-top: 70px;
 	margin-left:10%;
 	margin-right:10%;
-	margin-bottom: 50px;
+	/*margin-bottom: 50px;*/
+	background: #fff;
+	padding-left:20px;
+	padding-right:20px;
+	padding-bottom: 20px;
+	heigth: auto;
+	@media screen and (max-width: 992px) { 
+		padding-top: 110px;
+	}
+}
+body{
+	background: #dcdcdc;
 }

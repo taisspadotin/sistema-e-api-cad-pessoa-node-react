@@ -1,14 +1,17 @@
 $corFocus: #35bdb2;
+$cinza1: #dededf;
+/*@import url('https://fonts.googleapis.com/css?family=Indie+Flower&display=swap');*/
 
 @mixin foco{
 	box-shadow: 0 0 3px $corFocus !important;
 	border-color: $corFocus !important;
-	background: lighten($corFocus, 50) !important;
+	/*background: lighten($corFocus, 50) !important;*/
 }
 .form{
 	textarea:focus{
 		@include foco;
 	}
+	
 	input:focus{
 		@include foco;
 	}
@@ -20,5 +23,61 @@ $corFocus: #35bdb2;
 			cursor:pointer;
 			background: lighten($corFocus, 30) !important;
 		}	
+		.selected{
+			background: lighten($corFocus, 30) !important;
+		}
 	}
+}
+
+
+.botao{
+	margin-top: 1px !important;
+	width: 150px;
+	background: $corFocus !important;
+	cor: #000 !important;
+	&:hover{
+		background: lighten($corFocus, 30) !important;
+	}
+}
+
+fieldset{
+	border-radius: 10px;
+	border: 1px solid $cinza1;
+	
+	legend{
+		color: #000;
+		font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+		padding-left:5px;
+		padding-right:5px;
+		font-size: 1.1em;
+		font-weight: bold;
+		
+	}
+}
+
+.paginacao{
+	width: auto;
+	position: relative;
+	a{
+		&:hover{
+			background: lighten($corFocus, 30) !important;
+		}
+	}
+}
+
+.titulo{
+	margin-bottom: 20px;
+	padding-top:10px;
+	/*text-shadow: 0 1px 1px lighten(#000, 30);
+	border-bottom: 1px solid $corFocus;*/
+	background: lighten($corFocus, 40);
+	width:100%;
+	font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+	text-align:center;
+	border-radius: 4px;
+	h2{
+		color: #32383e;
+		font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+		padding-bottom:5px;
+	}	
 }

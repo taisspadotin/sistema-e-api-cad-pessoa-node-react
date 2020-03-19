@@ -28,13 +28,13 @@ class Navegacao extends Component{
 				>
 				<Link to='/'>Cadastro</Link>
 				</Menu.Item>
-				<Menu.Item
+				{/*<Menu.Item
 				  active={busAtivo}
 				  name='buscar'
 				  
 				>
 				<Link to='/buscar'>Buscar</Link>
-				</Menu.Item>
+				</Menu.Item>*/}
 
 				
 			</Menu>

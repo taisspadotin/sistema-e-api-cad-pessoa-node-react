@@ -28,6 +28,8 @@ else{
 		if (err)
 		  res.json(err);
 		else
+			console.log(docs);
+			
 		 resp = {
 			"TotalCount": count,
 			"paginas": Math.ceil(count/pageOptions.limit),
@@ -73,6 +75,12 @@ exports.criaCadastro= async (req, res) => {
 	 }
 	 else{
 		//atualizar
+		var data_nascimento = fim.nascimento;
+		if(data_nascimento !== undefined && data_nascimento !=='')
+		{
+			var data  = data_nascimento.split("/");
+			var data_formatada = data[2]+'/'+data[1]+'/'+data[0];
+		}
 		Cadastro.updateOne(
 		{"_id" : id_atualiza }, 
 		{ $set: 
@@ -81,7 +89,7 @@ exports.criaCadastro= async (req, res) => {
 				email: fim.email, 
 				sobre: fim.sobre, 
 				telefone: fim.telefone,
-				nascimento: fim.nascimento
+				nascimento: data_formatada
 			}
 		}, function(err, obj) {
 		if (err) throw err;

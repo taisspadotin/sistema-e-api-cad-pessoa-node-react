@@ -2,6 +2,7 @@
 
 ## Funcionamento do sistema
 O sistema realiza o cadastro de uma pessoa utilizando as informações do formulario na tela, ao clicar em um registro as informações são carregadas no formulario onde podem ser alteradas ou excluidas.
+A paginação é realizada pelo API onde é necessario informar alguns parametros como a pagina e a quantidade de registros.
 
 ![Screenshot](https://raw.githubusercontent.com/taisspadotin/cadastro_crud_react_node/master/imagens/Sem%20t%C3%ADtulo.jpg)
 

@@ -1,19 +1,52 @@
-$corFocus: #35bdb2;
+/*$corFocus: #b14d51;*/
+$corFocus: #36244a;
 $cinza1: #dededf;
-/*@import url('https://fonts.googleapis.com/css?family=Indie+Flower&display=swap');*/
+$roxo1: #36244a;
+$cor_font: #dcdcdc;
+@mixin font-title{
+	font-family: 'Liu Jian Mao Cao', cursive;
+}
+@mixin font-body{
+	font-family: 'Open Sans', sans-serif;
+	
+}
 
 @mixin foco{
 	box-shadow: 0 0 3px $corFocus !important;
 	border-color: $corFocus !important;
 	/*background: lighten($corFocus, 50) !important;*/
 }
+@mixin input-config{
+	border: 1px solid #8d8d8d50;
+	background: #dadada20;
+	width: 100%;
+	height: 35px;
+	border-radius: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	padding-top: 1px;
+	@include font-body;
+	color: $roxo1;
+}
 .form{
 	textarea:focus{
 		@include foco;
 	}
+	textarea{
+		@include input-config;
+		height: 70px;
+	}
+	input{
+		@include input-config;
 	
+	}
 	input:focus{
 		@include foco;
+	}
+	
+	label{
+		@include font-body;
+		font-size: 1.1em;
 	}
 	
 }
@@ -21,10 +54,11 @@ $cinza1: #dededf;
 	tr{
 		&:hover{
 			cursor:pointer;
-			background: lighten($corFocus, 30) !important;
+			background: rgba($corFocus, .3)!important;
+			
 		}	
 		.selected{
-			background: lighten($corFocus, 30) !important;
+			background: rgba($corFocus, .3)!important;
 		}
 	}
 }
@@ -33,27 +67,30 @@ $cinza1: #dededf;
 .botao{
 	margin-top: 1px !important;
 	width: 150px;
-	background: $corFocus !important;
-	cor: #000 !important;
+	background: $roxo1 !important;
+	color: #dcdcdc !important;
 	&:hover{
-		background: lighten($corFocus, 30) !important;
+		background: lighten($roxo1, 10) !important;
+		color: #fff;
 	}
 }
 
 fieldset{
 	border-radius: 10px;
-	border: 1px solid $cinza1;
+	border: 1px solid #000 !important;
 	
 	legend{
 		color: #000;
-		font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+		@include font-body;
 		padding-left:5px;
 		padding-right:5px;
 		font-size: 1.1em;
 		font-weight: bold;
+		width: auto;
 		
 	}
 }
+
 
 .paginacao{
 	width: auto;
@@ -68,16 +105,19 @@ fieldset{
 .titulo{
 	margin-bottom: 20px;
 	padding-top:10px;
-	/*text-shadow: 0 1px 1px lighten(#000, 30);
-	border-bottom: 1px solid $corFocus;*/
-	background: lighten($corFocus, 40);
+	/*border-bottom: 1px solid $roxo1;*/
+	/*background: lighten($corFocus, 40);*/
 	width:100%;
-	font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
 	text-align:center;
-	border-radius: 4px;
 	h2{
 		color: #32383e;
-		font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+		@include font-title;
 		padding-bottom:5px;
+		font-size: 3em;
+		font-weight: bold;
 	}	
+}
+
+.hr-body{
+	border-color: #33234950;
 }

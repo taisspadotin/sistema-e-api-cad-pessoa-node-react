@@ -1,0 +1,60 @@
+$roxo1: #36244a;
+$cor_font: #dcdcdc;
+@mixin font-title{
+	font-family: 'Liu Jian Mao Cao', cursive;
+}
+@mixin font-body{
+	font-family: 'Open Sans', sans-serif;
+	
+}
+
+
+.imagem-nav{
+	background: url("i1.jpg");
+	min-height: 480px;
+	background-repeat: no-repeat;
+	background-size: cover;
+	.conteudo-meio
+	{
+		padding-left: 10px;
+		padding-right: 10px;
+		padding-top: 120px;
+		width: 100%;
+		h1{
+			text-align:center;
+			font-weight: 900;
+			@include font-title;
+			color: #dcdcdc;
+			line-height: 1.3;
+			font-size: 3.2em;
+			
+		}
+		
+		p{
+			@include font-body;
+			color: $cor_font;
+			text-align:center;
+			font-size: 1.4em;
+		}
+	}
+}
+.index2{
+	min-height: 300px;
+	background: #fff;
+	@include font-body;
+	color: $roxo1;
+	padding-left: 50px;
+	padding-right: 50px;
+	padding-top: 35px;
+	
+	h4{
+		@include font-title;
+		font-size: 2em;
+		font-weight: 900;
+	}
+	p{
+		text-align: justify;
+		@include font-body;
+		font-size: 1.2em;
+	}
+}

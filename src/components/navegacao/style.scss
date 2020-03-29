@@ -1,3 +1,42 @@
+$cabecalho_cor: #36244a;
+$laranja1: #df6651;
+@mixin fontes{
+	font-family: 'Open Sans', sans-serif;
+	color:#dcdcdc !important;
+	text-align: center;
+}
+
+.navegacao{
+	height: 70px;
+	background: $cabecalho_cor;
+	.conteudo-nav{
+		
+		.mr-auto{
+			width: 100%;
+			align-items: end;
+			justify-content: end;
+		}
+		
+		a{
+			width: 100px;
+			margin-left: 10px;
+			@include fontes;
+			&:hover{
+				color: #ffffff !important;
+				
+				border-bottom: 2px solid $laranja1;
+			}
+		}
+		
+		
+	}
+	i{
+		color: #fff;
+		font-size: 1.5em;
+	}
+}
+
+
 .menu_inicial{
 	position:fixed;
 	width: 100%;

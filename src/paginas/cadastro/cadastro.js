@@ -4,6 +4,8 @@ import { Button, Checkbox, Form, Table, Message, Divider, Header, Popup, Paginat
 import axios, {serviceUrl, onSuccess,onFailure} from 'axios';
 import * as Scroll from 'react-scroll';
 import './style.scss';
+import {Col, Row} from 'react-bootstrap';
+
 export default class Cadastro extends Component{
 	constructor(props){
 		super(props);
@@ -29,12 +31,14 @@ export default class Cadastro extends Component{
 		idSelecionado: ''
 	}  
 	componentDidMount() {
-		axios.defaults.baseURL = 'http://localhost:3001/cadastro?page=0&limit=5';
+		///axios.defaults.baseURL = 'http://localhost:3001/cadastro?page=0&limit=5';
+		axios.defaults.baseURL = 'http://localhost:3333/pessoas';
 		axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
 		axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 		axios.get(serviceUrl, onSuccess, onFailure)
 		.then(resp => {
-			let d = (resp.data._Array);
+			//let d = (resp.data._Array);
+			let d = (resp.data);
 			this.setState({registros: d, paginas: resp.data.paginas})
 			//console.log(resp.data);
 			
@@ -51,7 +55,8 @@ export default class Cadastro extends Component{
 		scroll.scrollToTop();
 		
 		//colocar os valores nos campos:
-		axios.defaults.baseURL = 'http://localhost:3001/cadastro?id='+id;
+		//axios.defaults.baseURL = 'http://localhost:3001/cadastro?id='+id;
+		axios.defaults.baseURL = 'http://localhost:3333/pessoas?id='+id;
 		axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
 		axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 		axios.get(serviceUrl, onSuccess, onFailure)
@@ -94,13 +99,16 @@ export default class Cadastro extends Component{
 			{	
 				let enviar = { nome: nomeValue, email: emailValue, telefone:telefoneValue, sobre:sobreValue, nascimento:nascimentoValue};
 
-				fetch('http://localhost:3001/cadastro', {
+				fetch('http://127.0.0.1:3333/pessoas', {
 					method: 'post',
 					body: JSON.stringify(enviar)
 				  }).then(function(response) {
 					if(response.status === 201){
 						alert('cadastro realizado com sucesso');
 						document.location.reload();
+					}
+					else{
+						alert('erro');
 					}
 					
 				  });
@@ -126,6 +134,8 @@ export default class Cadastro extends Component{
 		axios.get(serviceUrl, onSuccess, onFailure)
 		.then(resp => {
 			let d = (resp.data._Array);
+			//let d = resp.data;
+			//console.log(resp.data);
 			this.setState({registros: d, paginas: resp.data.paginas})
 			//console.log(resp.data);
 			
@@ -195,7 +205,7 @@ export default class Cadastro extends Component{
 				</Table.Header>
 				<Table.Body>
 				{this.state.registros.map((row)=>
-				  <Table.Row key={row._id} onClick={()=>this.selecionaRegistro(row._id)}>
+				  <Table.Row key={row.id} onClick={()=>this.selecionaRegistro(row.id)}>
 					<Table.Cell>{row.nome}</Table.Cell>
 					<Table.Cell>{row.email}</Table.Cell>
 					<Table.Cell>{row.nascimento}</Table.Cell>
@@ -220,43 +230,51 @@ export default class Cadastro extends Component{
 		
 		return(
 		<>
-			<Navegacao ativo="cadastro"/>
+			<div className="conteudo-corpo">
+			<Navegacao fundo={'none'}/>
+			<br/>
 			<div className="geral">
-				 <div className="titulo">
+			{/*<div className="titulo">
 					<h2>Cadastro de pessoa</h2>
-				 </div>
-				 <Form>
-				 <fieldset>
-				 <legend>Informações</legend>
+			</div>
+			<hr className="hr-body"/>*/}
+				 <form className="form">
+				 {/*<fieldset>
+				 <legend>Informações</legend>*/}
 				 <br/>
-					<Form.Field>
-					  <label>Nome</label>
-					  <input onChange={this.inputChange} name='nomeValue' ref={this.refNome} type='text' value={nomeValue}/>
-					  
-					</Form.Field>
-					<Form.Field>
-					  <label>Email</label>
-					  <input onChange={this.inputChange} name='emailValue' ref={this.refEmail} type='email' value={emailValue}/>
-					</Form.Field>
-					<Form.Field>
-						<label>Sobre</label>
-						<textarea ref={this.refSobre} onChange={this.inputChange} name='aboutValue' value={aboutValue} placeholder='Tell us more about you...' />
-						
-					</Form.Field>
-					<Form.Group widths='equal'>
-						<Form.Field>
+					<Row className="mb-3">
+						<Col>
+							<label>Nome</label>
+							<input onChange={this.inputChange} name='nomeValue' ref={this.refNome} type='text' value={nomeValue}/>
+						</Col>
+					</Row>
+					<Row className="mb-3">
+						<Col>
+							<label>Email</label>
+							<input onChange={this.inputChange} name='emailValue' ref={this.refEmail} type='email' value={emailValue}/>
+						</Col>
+					</Row>
+					<Row className="mb-3">
+						<Col>
+							<label>Sobre</label>
+							<textarea ref={this.refSobre} onChange={this.inputChange} name='aboutValue' value={aboutValue} placeholder='Tell us more about you...' />
+						</Col>
+					</Row>
+					<Row className="mb-3">
+						<Col sm>
 							<label>Telefone</label>
 							<input ref={this.refTelefone} value={telefoneValue} onChange={this.inputChange} name='telefoneValue' />
-						</Form.Field>
-						<Form.Field>
+						</Col>
+						<Col sm>
 							<label>Nascimento</label>
 							<input ref={this.refNascimento} value={nascimentoValue} onChange={this.inputChange} name='nascimentoValue' />
-						</Form.Field>
+						</Col>
 						
-					</Form.Group>
-					</fieldset>
+					</Row>
+					{/*</fieldset>*/}
 					<br/>
-					<Form.Field align="center">
+					<Row align="center">
+						<Col>
 						<Button className="botao" onClick={() =>document.location.reload()}>
 						  Novo
 						</Button>
@@ -270,13 +288,16 @@ export default class Cadastro extends Component{
 							 <Button className="botao" onClick={()=>this.deletar()}>
 								Deletar
 							</Button>
-						 }/>	
-					</Form.Field>
+						 }/>
+						</Col>	
+					</Row>
 					<br/>
 					{registroBanco}
 					
-			   </Form>
+			   </form>
 			   
+			</div>
+			<br/>
 			</div>
 		</>	
 		)

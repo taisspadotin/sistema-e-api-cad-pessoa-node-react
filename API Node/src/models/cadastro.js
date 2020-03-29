@@ -20,7 +20,7 @@ const schema = new Schema({
     required: false
   },
   nascimento: {
-    type: Date,
+    type: String,
     required: false
   }
 });

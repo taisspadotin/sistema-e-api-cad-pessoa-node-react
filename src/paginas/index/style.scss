@@ -1,33 +1,46 @@
 $roxo1: #36244a;
-$cor_font: #dcdcdc;
+$cor_font: #fff;
+$cor_neon: #f70485;
 @mixin font-title{
-	font-family: 'Liu Jian Mao Cao', cursive;
+	/*font-family: 'Liu Jian Mao Cao', cursive;*/
+	font-family: 'Comfortaa', cursive;
+	text-transform: uppercase;
+	letter-spacing: 0.212em;
+	font-weight: 100;
 }
 @mixin font-body{
 	font-family: 'Open Sans', sans-serif;
 	
 }
-
+.hr-inicio{
+	border: 0;
+	border-top: 1px solid rgba($cor_font, 0.5);
+	width: 40%;
+}
 
 .imagem-nav{
-	background: url("i1.jpg");
-	min-height: 480px;
+	background: url("../../img/fundo.jpg");
+	height: 100vh;
 	background-repeat: no-repeat;
 	background-size: cover;
+	border-bottom: 3px solid #913230;
 	.conteudo-meio
 	{
 		padding-left: 10px;
 		padding-right: 10px;
 		padding-top: 120px;
 		width: 100%;
+		
 		h1{
 			text-align:center;
-			font-weight: 900;
 			@include font-title;
-			color: #dcdcdc;
+			color: $cor_font;
 			line-height: 1.3;
-			font-size: 3.2em;
-			
+			font-size: 2.5em;
+			/*-webkit-anim.ation: glow 2s ease-in-out infinite alternate;
+			-moz-animation: glow 2s ease-in-out infinite alternate;
+			animation: glow 2s ease-in-out infinite alternate;*/
+
 		}
 		
 		p{
@@ -35,8 +48,20 @@ $cor_font: #dcdcdc;
 			color: $cor_font;
 			text-align:center;
 			font-size: 1.4em;
+			line-height: 1.5em;
 		}
 	}
+}
+@keyframes glow {
+      from {
+      color: #fff;
+      text-shadow: 0 0 5px $cor_neon, 0 0 10px $cor_neon, 0 0 15px $cor_neon, 0 0 20px $cor_neon, 0 0 25px $cor_neon, 0 0 25px $cor_neon, 0 0 30px $cor_neon, 0 0 35px $cor_neon;
+  }
+  
+  to {
+     color: #dcdcdc;
+     text-shadow: 0 0 5px $cor_neon, 0 0 10px $cor_neon, 0 0 15px $cor_neon, 0 0 20px $cor_neon, 0 0 25px $cor_neon, 0 0 30px $cor_neon, 0 0 35px $cor_neon, 0 1 40px $cor_neon;
+  }
 }
 .index2{
 	min-height: 300px;

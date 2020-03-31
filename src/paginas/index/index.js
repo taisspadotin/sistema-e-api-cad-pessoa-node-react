@@ -13,7 +13,8 @@ class Index extends Component{
 			<Navegacao fundo={'none'}/>
 			<br/>
 			<div className="conteudo-meio">
-				<h1>Cadastros</h1>
+				<h1>Cadastros</h1> 
+				<hr className="hr-inicio"/>
 				<p>Site feito em React com back-end em node para cadastro de pessoas.
 				<br/>Navegue pelo site para descobrir todas as opções disponíveis, saiba quais são nossos objetivos.</p>
 			</div>

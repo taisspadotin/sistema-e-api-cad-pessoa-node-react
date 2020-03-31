@@ -1,8 +1,8 @@
 import React ,{ Component} from 'react';
-import { Menu, Popup } from 'semantic-ui-react'
+import { Popup } from 'semantic-ui-react'
 import './style.scss';
-import {Link} from 'react-router-dom';
-import {Navbar, NavDropdown, Nav, FormControl, Button, Form} from 'react-bootstrap';
+import {Navbar, Nav} from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 
 class Navegacao extends Component{
 	state = {}
@@ -12,13 +12,13 @@ class Navegacao extends Component{
 		return(
 		<>
 		<Navbar collapseOnSelect expand="lg" style={{background: this.props.fundo}} className="navegacao">
-		  <Navbar.Brand href="/"><Popup content='Home' trigger={<i className="paper plane icon" ></i>}/></Navbar.Brand>
+		  <LinkContainer to="/"><Navbar.Brand><Popup content='Home' trigger={<i className="paper plane icon" ></i>}/></Navbar.Brand></LinkContainer>
 		  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 		  <Navbar.Collapse  id="responsive-navbar-nav" className="conteudo-nav">
 			<Nav  className="mr-auto">
-			  <Nav.Link href="/cadastro">Cadastro</Nav.Link>
+			  <LinkContainer to="/cadastro"><Nav.Link>Cadastro</Nav.Link></LinkContainer>
 			  <Nav.Link eventKey={2} href="/">Opções</Nav.Link>
-			  <Nav.Link eventKey={2} href="/">Entrar</Nav.Link>
+			  <LinkContainer to="/login"><Nav.Link>Entrar</Nav.Link></LinkContainer>
 			</Nav>
 		  </Navbar.Collapse>
 		</Navbar>

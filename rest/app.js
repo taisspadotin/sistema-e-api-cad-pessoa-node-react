@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 //rotas
 const rotaPessoas = require('./routes/pessoas');
+const rotaUsuarios = require('./routes/usuarios');
+
 app.use(cors());
 app.use(morgan('dev'));//MOSTRA O LOG DE GET, POST ...
 app.use(bodyParser.urlencoded({extended: false}));//apenas dados simples
@@ -24,6 +26,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/pessoas', rotaPessoas);
+app.use('/usuarios', rotaUsuarios);
 
 /*app.use('/teste', (req, res, next)=>{
 	res.status(200).send({mensagem: 'ok'});

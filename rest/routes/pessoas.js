@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('../mysql').pool;
+const login = require('../middleware/login');//para proteger a rota
 //TODAS AS PESSOAS
 router.get('/', (req, res, next)=>{
 	/*res.status(200).send({mansagme: 'get prod'});*/
@@ -8,36 +9,61 @@ router.get('/', (req, res, next)=>{
 		if(error){res.status(500).send({error: error});}//erro de conexao
 		conn.query(
 			'SELECT * FROM pessoas',
-			(error, resultado, field)=>{
+			(error, result, field)=>{
 				conn.release(); //fechando conexao p nao travar
 				if(error){ return res.status(500).send({error: error});}
-				
-				return res.status(201).send({
-					response: resultado
-				});
+				const response = {
+					quantidade: result.length,
+					pessoas: result.map(pe =>{
+						return{
+							id_pessoa: pe.id_pessoa,
+							nome: pe.nome,
+							email: pe.email,
+							request: {
+								tipo: 'GET',
+								descricao: 'Retorna todos os detalhes de uma pessoa',
+								url: 'http://localhost:3020/pessoas/'+pe.id_pessoa
+							}
+						}
+					})
+				};
+				return res.status(201).send(response);
 			}
 		);
 	});
 });
 
 //INSERE PESSOA
-router.post('/', (req, res, next)=>{
+router.post('/', login.obrigatorio, (req, res, next)=>{
 	/*const pessoa = {
 		nome: req.body.nome,
 		email: req.body.email
 	};*/
+	//pegando o usuario logado
+	console.log(req.usuario)
 	mysql.getConnection((error, conn)=>{
 		if(error){res.status(500).send({error: error});}//erro de conexao
 		conn.query(
 			'INSERT INTO pessoas(nome, email) VALUES(?, ?)',
 			[req.body.nome, req.body.email],
-			(error, resultado, field)=>{
+			(error, result, field)=>{
 				conn.release(); //fechando conexao p nao travar
 				if(error){ return res.status(500).send({error: error});}
-				res.status(201).send({
-					mensagem: 'Pessoa criado',
-					id_pessoa: resultado.insertId
-				});
+				const response = {
+					mensagem: 'Pessoa inserida com sucesso!',
+					pessoa_criada: {
+						id_pessoa: result.insertId,
+						nome: req.body.nome, 
+						email: req.body.email
+					},
+					request: {
+								tipo: 'GET',
+								descricao: 'Retorna todos as pessoas',
+								url: 'http://localhost:3020/pessoas/'
+							}
+					
+				};
+				return res.status(201).send(response);
 			}
 		);
 	});
@@ -52,13 +78,28 @@ router.get('/:id_pessoa', (req, res, next)=>{
 		conn.query(
 			'SELECT * FROM pessoas WHERE id_pessoa = ?',
 			[id],
-			(error, resultado, field)=>{
+			(error, result, field)=>{
 				conn.release(); //fechando conexao p nao travar
 				if(error){ return res.status(500).send({error: error});}
-				
-				return res.status(201).send({
-					response: resultado
+				if(result.length === 0){
+					return res.status(404).send({
+					mensagem: 'Nenhuma pessoa com esse id encontrado'
 				});
+				}
+				const response = {
+					pessoa: {
+						id_pessoa: result[0].id_pessoa,
+						nome: result[0].nome, 
+						email: result[0].email,
+						request: {
+								tipo: 'GET',
+								descricao: 'Retorna todos as pessoas',
+								url: 'http://localhost:3020/pessoas/'
+							}
+					}			
+						
+				};
+				return res.status(201).send(response);
 			}
 		);
 	});
@@ -74,12 +115,24 @@ router.patch('/', (req, res, next)=>{
 				SET nome=?, email=? 
 				WHERE id_pessoa=?`,
 			[req.body.nome, req.body.email, req.body.id_pessoa],
-			(error, resultado, field)=>{
+			(error, result, field)=>{
 				conn.release(); //fechando conexao p nao travar
 				if(error){ return res.status(500).send({error: error});}
-				res.status(202).send({
-					mensagem: 'Pessoa alterada'
-				});
+				const response = {
+					mensagem: 'Pessoa alterada com sucesso!',
+					pessoa_alterada: {
+						id_pessoa: req.body.id_pessoa,
+						nome: req.body.nome, 
+						email: req.body.email
+					},
+					request: {
+								tipo: 'GET',
+								descricao: 'Retorna uma pessoa',
+								url: 'http://localhost:3020/pessoas/'+req.body.id_pessoa
+							}
+					
+				};
+				res.status(202).send(response);
 			}
 		);
 	});
@@ -94,7 +147,7 @@ router.patch('/', (req, res, next)=>{
 		conn.query(
 			'DELETE FROM pessoas WHERE id_pessoa = ?',
 			[req.query.id_pessoa],
-			(error, resultado, field)=>{
+			(error, result, field)=>{
 				conn.release(); //fechando conexao p nao travar
 				if(error){ return res.status(500).send({error: error});}
 				res.status(202).send({
@@ -110,12 +163,22 @@ router.delete('/:id_pessoa', (req, res, next)=>{
 		conn.query(
 			'DELETE FROM pessoas WHERE id_pessoa = ?',
 			[req.params.id_pessoa],
-			(error, resultado, field)=>{
+			(error, result, field)=>{
 				conn.release(); //fechando conexao p nao travar
 				if(error){ return res.status(500).send({error: error});}
-				res.status(202).send({
-					mensagem: 'Pessoa Excluida'
-				});
+				const response = {
+					mensagem: "Pessoa removida com sucesso",
+					request:{
+						tipo: "POST",
+						descricao: "Insere uma pessoa",
+						url: "http://localhost:3020/pessoas/",
+						body: {
+							nome: 'String',
+							email: 'String'
+						}
+					}
+				};
+				return res.status(202).send(response);
 			}
 		);
 	});

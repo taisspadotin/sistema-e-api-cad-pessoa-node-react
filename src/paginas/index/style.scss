@@ -20,10 +20,11 @@ $cor_neon: #f70485;
 
 .imagem-nav{
 	background: url("../../img/fundo.jpg");
-	height: 100vh;
+	/*height: 100vh;*/
+	min-height: 460px;
 	background-repeat: no-repeat;
 	background-size: cover;
-	border-bottom: 3px solid #913230;
+	/*border-bottom: 3px solid #913230;*/
 	.conteudo-meio
 	{
 		padding-left: 10px;
@@ -74,7 +75,7 @@ $cor_neon: #f70485;
 	
 	h4{
 		@include font-title;
-		font-size: 2em;
+		font-size: 1.4em;
 		font-weight: 900;
 	}
 	p{

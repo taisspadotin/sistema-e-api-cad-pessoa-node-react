@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Navegacao from '../../components/navegacao/navegacao';
 import './style.scss';
 import {Row, Col} from 'react-bootstrap';
-import {Accordion} from 'semantic-ui-react';
+/*import {Accordion} from 'semantic-ui-react';*/
 
 
 class Index extends Component{
@@ -22,26 +22,13 @@ class Index extends Component{
 		<div className='index2'>
 			<Row align="center">
 				<Col sm={3}>
-					<h4>ops I did it again</h4>
+					<h4>Varius sit amet mattis</h4>
 					
 				</Col>
 				<Col sm={9}>
-					<p>I think I did it again
-I made you believe we're more than just friends
-Oh baby
-It might seem like a crush
-But it doesn't mean that I'm serious
-'Cause to lose all my senses
-That is just so typically me
-Oh baby, baby
-Oops, I did it again
-I played with your heart, got lost in the game
-Oh baby, baby
-Oops, you think I'm in love
-That I'm sent from above
-I'm not that innocent
-You see my problem is this
-I'm dreaming away</p>
+					<p>
+					Velit euismod in pellentesque massa. A erat nam at lectus urna duis. Quam id leo in vitae turpis massa sed elementum tempus. Iaculis nunc sed augue lacus viverra vitae congue. Sed libero enim sed faucibus turpis in eu mi. Facilisi morbi tempus iaculis urna id volutpat lacus. Amet justo donec enim diam vulputate ut. Id semper risus in hendrerit. Diam vulputate ut pharetra sit. Consectetur lorem donec massa sapien faucibus. Justo nec ultrices dui sapien eget mi.
+					</p>
 				</Col>
 			</Row>
 		

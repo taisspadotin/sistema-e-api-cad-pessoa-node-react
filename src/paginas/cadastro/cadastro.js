@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Navegacao from '../../components/navegacao/navegacao';
-import { Button, Table, Message, Divider, Popup, Pagination, Icon} from 'semantic-ui-react';
+import { Button, Table, Message, Popup, Pagination, Icon} from 'semantic-ui-react';
 import axios, {serviceUrl, onSuccess,onFailure} from 'axios';
 import * as Scroll from 'react-scroll';
 import './style.scss';
@@ -42,10 +42,28 @@ export default class Cadastro extends Component{
 		axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 		axios.get(serviceUrl, onSuccess, onFailure)
 		.then(resp => {
-			//let d = (resp.data._Array);
-			//let d = (resp.data);
-			let d = (resp.data.response);
-			this.setState({registros: d, paginas: resp.data.paginas})
+			let d = (resp.data.pessoas);
+			const registros = [];
+			let id_pessoa, nome, email, nascimento, telefone, sobre;
+			d.map((row)=>{
+				id_pessoa = row.id_pessoa;
+				nome = row.nome === undefined? '':  row.nome;
+				email = row.email === undefined? '':  row.email;
+				telefone = row.telefone === undefined? '':  row.telefone;
+				nascimento = row.nascimento === undefined? '':  row.nascimento;
+				sobre = row.sobre === undefined? '':  row.sobre;
+				
+				registros.push({
+					id_pessoa,
+					nome,
+					email,
+					telefone,
+					nascimento, 
+					sobre
+				});}
+			);
+			
+			this.setState({registros: registros})//paginas: resp.data.paginas
 			//console.log(resp.data);
 			
 		})
@@ -67,18 +85,8 @@ export default class Cadastro extends Component{
 		axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 		axios.get(serviceUrl, onSuccess, onFailure)
 		.then(resp => {
-			//let d = (resp.data._Array);
-			let d = (resp.data.response[0]);
+			let d = (resp.data.pessoa);
 			
-			//this.setState({registros: d, paginas: resp.data.paginas})
-			//console.log(resp.data);
-			
-			/*this.refNome.current.value = resp.data[0].nome;
-			this.refEmail.current.value = resp.data[0].email;
-			this.refTelefone.current.value = resp.data[0].telefone;
-			this.refNascimento.current.value = resp.data[0].nascimento;
-			this.refSobre.current.value = resp.data[0].sobre;*/
-			/*this.setState({nomeValue: resp.data[0].nome, emailValue:resp.data[0].email, telefoneValue:resp.data[0].telefone, nascimentoValue:resp.data[0].nascimento, sobreValue:resp.data[0].sobre});*/
 			let nomeValue = d.nome;
 			let emailValue = d.email === undefined? '':  d.email;
 			let telefoneValue = d.telefone === undefined? '':  d.telefone;
@@ -271,10 +279,9 @@ export default class Cadastro extends Component{
 			<Navegacao fundo={'none'}/>
 			<br/>
 			<div className="geral">
-			{/*<div className="titulo">
-					<h2>Cadastro de pessoa</h2>
+			<div className="titulo">
+					<h2>Cadastro de pessoas</h2>
 			</div>
-			<hr className="hr-body"/>*/}
 				 <form className="form">
 				 {/*<fieldset>
 				 <legend>Informações</legend>*/}

@@ -1,8 +1,10 @@
 import React,{Component} from 'react';
 import './style-login.scss';
-import {Link} from 	'react-router-dom';
 
 class Login extends Component{
+	login = () =>{
+		window.location.href = "/";
+	}
 	render(){
 		return(
 			<>
@@ -14,9 +16,9 @@ class Login extends Component{
 							<input className="input-login" placeholder="User"/>
 							<input className="input-login" placeholder="Password"/>
 							<br/>
-							<Link to="/"><button className="botao-login">SING IN</button></Link>
+							<button className="botao-login" onClick={()=>this.login()}>SING IN</button>
 							<br/>
-							<p>Forgot <a>User name / password </a>?</p>
+							<p>Forgot <a href="/">User name / password </a>?</p>
 							<br/>
 							<h5>SING UP</h5>
 						</div>	

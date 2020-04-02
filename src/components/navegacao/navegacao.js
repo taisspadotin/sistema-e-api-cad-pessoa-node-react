@@ -17,7 +17,7 @@ class Navegacao extends Component{
 		  <Navbar.Collapse  id="responsive-navbar-nav" className="conteudo-nav">
 			<Nav  className="mr-auto">
 			  <LinkContainer to="/cadastro"><Nav.Link>Cadastro</Nav.Link></LinkContainer>
-			  <Nav.Link eventKey={2} href="/usuario">Usuários</Nav.Link>
+			  <LinkContainer to="/usuario"><Nav.Link>Usuários</Nav.Link></LinkContainer>
 			  <LinkContainer to="/login"><Nav.Link>Entrar</Nav.Link></LinkContainer>
 			</Nav>
 		  </Navbar.Collapse>

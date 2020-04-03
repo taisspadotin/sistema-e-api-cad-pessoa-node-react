@@ -6,7 +6,7 @@ import * as Scroll from 'react-scroll';
 import './style.scss';
 import {Col, Row} from 'react-bootstrap';
 import {Route} from 'react-router-dom';
-
+import api from '../../api';
 
 
 export default class Cadastro extends Component{
@@ -36,13 +36,13 @@ export default class Cadastro extends Component{
 	}  
 	componentDidMount() {
 		
-		///axios.defaults.baseURL = 'http://localhost:3001/cadastro?page=0&limit=5';
-		axios.defaults.baseURL = 'http://localhost:3020/pessoas';
+		axios.defaults.baseURL = 'http://localhost:3020/pessoas?page=0&limit=5';
 		axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
 		axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 		axios.get(serviceUrl, onSuccess, onFailure)
 		.then(resp => {
 			let d = (resp.data.pessoas);
+			this.setState({paginas: resp.data.total_paginas});
 			const registros = [];
 			let id_pessoa, nome, email, nascimento, telefone, sobre;
 			d.map((row)=>{
@@ -71,38 +71,28 @@ export default class Cadastro extends Component{
 			console.log(error);
 		})
 	}
-	selecionaRegistro = (id) =>{
+	selecionaRegistro = async (id) =>{
 		/*mudar a cor da tr*/
 		
 		this.setState({idSelecionado: id});
 		let scroll     = Scroll.animateScroll;
 		scroll.scrollToTop();
 		
-		//colocar os valores nos campos:
-		//axios.defaults.baseURL = 'http://localhost:3001/cadastro?id='+id;
-		axios.defaults.baseURL = 'http://localhost:3020/pessoas/'+id;
-		axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
-		axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-		axios.get(serviceUrl, onSuccess, onFailure)
-		.then(resp => {
-			let d = (resp.data.pessoa);
+		const url = 'http://localhost:3020/pessoas/'+id;
+		const resp = await axios.get(url);
+		let d = (resp.data.pessoa);
+		
+		let nomeValue = d.nome;
+		let emailValue = d.email === undefined? '':  d.email;
+		let telefoneValue = d.telefone === undefined? '':  d.telefone;
+		let nascimentoValue = d.nascimento === undefined? '':  d.nascimento;
+		let sobreValue = d.sobre === undefined? '':  d.sobre;
 			
-			let nomeValue = d.nome;
-			let emailValue = d.email === undefined? '':  d.email;
-			let telefoneValue = d.telefone === undefined? '':  d.telefone;
-			let nascimentoValue = d.nascimento === undefined? '':  d.nascimento;
-			let sobreValue = d.sobre === undefined? '':  d.sobre;
-			
-			this.setState({nomeValue, emailValue, telefoneValue, nascimentoValue, sobreValue});
-			
-			
-		})
-		.catch(error => {
-			console.log(error);
-		})
+		this.setState({nomeValue, emailValue, telefoneValue, nascimentoValue, sobreValue});
+		//console.log(resp);
 	}
-	cadastrar = () =>{
-		//const history = useHistory();
+	 cadastrar = async () =>{
+		 //const history = useHistory();
 		if(this.state.idSelecionado !== ''){
 			alert('Esse registro já existe no banco!');
 		}
@@ -114,36 +104,11 @@ export default class Cadastro extends Component{
 				alert('Preencha o nome');
 			}
 			else
-			{	
+			{
 				let enviar = { nome: nomeValue, email: emailValue, telefone:telefoneValue, sobre:sobreValue, nascimento:nascimentoValue};
-
-				/*fetch('http://127.0.0.1:3333/pessoas', {
-					method: 'post',
-					body: JSON.stringify(enviar)
-				  }).then(function(response) {
-					if(response.status === 201){
-						alert('cadastro realizado com sucesso');
-						document.location.reload();
-					}
-					else{
-						alert('erro');
-					}
-					
-				  });*/
-				  
-				  
-
-				  /*axios.post(`http://localhost:3001/cadastro`, (enviar))
-			.then(resp =>{
-				alert(resp.data.message);
-				document.location.reload();*/
-				
-		axios.post('http://localhost:3020/pessoas', enviar)
-  .then(function(response){
-    alert('sim');
-	//return <Route patch="/cadastro"/>;
-	//history.push('/cadastro');
-  }); 
+				const resp = await axios.post('http://localhost:3020/pessoas', enviar);
+				alert(resp.data.mensagem);
+				document.location.reload();  
 			}
 		}
 	}
@@ -155,19 +120,16 @@ export default class Cadastro extends Component{
      })
     } 
 	handlePaginationChange = (e, { activePage }) => {
+		let pagina = (activePage - 1);
+		console.log(pagina);
 		this.setState({pagina_atual: activePage});
-		axios.defaults.baseURL = 'http://localhost:3020/pessoas?page='+activePage+'&limit=5';
+		axios.defaults.baseURL = 'http://localhost:3020/pessoas?page='+pagina+'&limit=5';
 		axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
 		axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 		axios.get(serviceUrl, onSuccess, onFailure)
 		.then(resp => {
-			//let d = (resp.data._Array);
-			let d = (resp.data.response);
-			//console.log((resp.data.response));
-			//let d = resp.data;
-			//console.log(resp.data);
-			this.setState({registros: d, paginas: resp.data.paginas})
-			//console.log(resp.data);
+			let d = (resp.data.pessoas);
+			this.setState({registros: d})
 			
 		})
 		.catch(error => {
@@ -175,57 +137,39 @@ export default class Cadastro extends Component{
 		})
 	}
 	
-	alterar = () =>{
+	alterar = async () =>{
+		
 		if(this.state.idSelecionado === ''){
 			alert('selecione um registro!');
 		}
 		else{
 			const id = this.state.idSelecionado;
 			let enviar = { id_pessoa: id, nome: this.refNome.current.value, email: this.refEmail.current.value, telefone:this.refTelefone.current.value, sobre:this.refSobre.current.value, nascimento:this.refNascimento.current.value};
-
-			/*fetch('http://localhost:3020/pessoas', {
-				method: 'post',
-				body: JSON.stringify(enviar)
-			  }).then(function(response) {
-				if(response.status === 201){
-					alert('dados alterados com sucesso');
-					document.location.reload();
-				}
-				
-			  });*/
-			/*  axios.patch('http://localhost:3020/pessoas', enviar)
-  .then(function(response){
-    alert('sim');
-  }); */
-  
-  axios.patch('http://localhost:3020/pessoas', enviar)
-        .then(response => {
-            console.log(response)
-        })
-        .catch(error => {
-            console.log(error)
-        })
-		}
+			const resp = await axios.put('http://localhost:3020/pessoas', enviar);
+			alert(resp.data.mensagem);
+			document.location.reload();
+			//const response = await api.put('/pessoas', enviar);
+		
+        }
 	}
 	
-	deletar = () =>{
+	deletar = async () =>{
 		if(this.state.idSelecionado === ''){
 			alert('selecione um registro!');
 		}
 		else{
 			const id = this.state.idSelecionado;
-			axios.delete(`http://localhost:3020/pessoas/${id}`)
-			.then(resp =>{
-				alert(resp.data.mensagem);
-				document.location.reload();
-			});
+			const resp = await axios.delete(`http://localhost:3020/pessoas/${id}`);
+			alert(resp.data.mensagem);
+			document.location.reload();
+			
 		}
 	}
 	novo = () =>{
 		return <Route patch="/cadastro"/>;
 	}
 	render(){
-		const { nomeValue, aboutValue, emailValue, telefoneValue, nascimentoValue} = this.state;   
+		const { nomeValue, sobreValue, emailValue, telefoneValue, nascimentoValue} = this.state;   
 		let paginas = (this.state.paginas);
 		let registroBanco = '';
 		//console.log(this.state.registros.length);
@@ -301,7 +245,7 @@ export default class Cadastro extends Component{
 					<Row className="mb-3">
 						<Col>
 							<label>Sobre</label>
-							<textarea ref={this.refSobre} onChange={this.inputChange} name='aboutValue' value={aboutValue} placeholder='Tell us more about you...' />
+							<textarea ref={this.refSobre} onChange={this.inputChange} name='sobreValue' value={sobreValue} placeholder='Tell us more about you...' />
 						</Col>
 					</Row>
 					<Row className="mb-3">
@@ -319,28 +263,28 @@ export default class Cadastro extends Component{
 					<br/>
 					<Row align="center">
 						<Col>
-						<Button animated className="botao" >
+						<Button animated className="botao" type="button" onClick={() =>this.novo()}>
 						  <Button.Content visible>Novo</Button.Content>
-						  <Button.Content hidden onClick={() =>this.novo()}>
+						  <Button.Content hidden>
 							<Icon name='add' />
 						  </Button.Content>
 						</Button>
-						<Button animated className="botao" >
+						<Button animated className="botao" type="button" onClick={() => this.cadastrar()}>
 						  <Button.Content visible>Cadastrar</Button.Content>
-						  <Button.Content hidden onClick={() => this.cadastrar()}>
+						  <Button.Content hidden>
 							<Icon name='arrow right' />
 						  </Button.Content>
 						</Button>
-						<Button animated className="botao" >
+						<Button animated className="botao" type="button" onClick={()=>this.alterar()}>
 						  <Button.Content visible>Alterar</Button.Content>
-						  <Button.Content hidden  onClick={()=>this.alterar()}>
+						  <Button.Content hidden>
 							<Icon name='pencil' />
 						  </Button.Content>
 						</Button>
 						 <Popup content='Deletar registro' trigger={
-							 <Button animated className="botao" >
+							 <Button animated className="botao" type="button" onClick={()=>this.deletar()}>
 							  <Button.Content visible>Deletar</Button.Content>
-							  <Button.Content hidden onClick={()=>this.deletar()}>
+							  <Button.Content hidden>
 								<Icon name='trash alternate' />
 							  </Button.Content>
 							</Button>

@@ -49,7 +49,10 @@ exports.loginUsuario = (req, res, next)=>{
 						}
 						bcrypt.compare(req.body.senha, results[0].senha, (error, result)=>{
 							if(error){
-								return res.status(401).send({mensagem: 'Falha na autenticação'});
+								return res.status(401).send({
+									mensagem: 'Falha na autenticação',
+									codigo: 0
+									});
 							}
 							if(result){
 								//gerando o token
@@ -63,11 +66,15 @@ exports.loginUsuario = (req, res, next)=>{
 									});
 								return res.status(200).send({
 										mensagem: 'Autenticado com sucesso',
-										token: token
+										token: token,
+										codigo: 1
 									});
 							}
 							
-							return res.status(401).send({mensagem: 'Falha na autenticação'});
+							return res.status(401).send({
+								mensagem: 'Falha na autenticação',
+								codigo: 0
+								});
 						});
 					})
 	});
@@ -84,7 +91,8 @@ exports.getUsuarios = (req, res, next)=>{
 					usuarios: results.map(row =>{
 						return{
 							id_usuario: row.id_usuario,
-							usuario: row.id_usuario,
+							usuario: row.usuario,
+							email: row.email,
 							request: {
 								tipo: 'GET'
 							}

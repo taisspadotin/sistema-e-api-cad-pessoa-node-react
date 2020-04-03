@@ -105,11 +105,11 @@ body{
 	tr{
 		&:hover{
 			cursor:pointer;
-			background: rgba($corFocus, .3)!important;
+			background: rgba($cor1, .2)!important;
 			
 		}	
 		.selected{
-			background: rgba($corFocus, .3)!important;
+			background: rgba($cor1, .2)!important;
 		}
 	}
 }

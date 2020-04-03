@@ -1,16 +1,38 @@
 const mysql = require('../mysql').pool;
 
 exports.getPessoas = (req, res, next)=>{
+    const pageOptions = {
+		page: parseInt(req.query.page, 10) || 0,
+		limit: parseInt(req.query.limit, 10) || 10
+	}
+	let inicio_busca = ((pageOptions.page)*(pageOptions.limit));
+	//console.log(inicio_busca);
 	/*res.status(200).send({mansagme: 'get prod'});*/
+	//'SELECT SQL_CALC_FOUND_ROWS *, FOUND_ROWS() AS fr FROM pessoas limit ?,?',
 	mysql.getConnection((error, conn)=>{
 		if(error){res.status(500).send({error: error});}//erro de conexao
 		conn.query(
-			'SELECT * FROM pessoas',
+			'SELECT SQL_CALC_FOUND_ROWS *, FOUND_ROWS() AS fr FROM pessoas limit ?,?',
+			[inicio_busca, pageOptions.limit],
 			(error, result, field)=>{
-				conn.release(); //fechando conexao p nao travar
 				if(error){ return res.status(500).send({error: error});}
-				const response = {
+				//console.log(result);
+				
+				//CONSULTA PARA PEGAR QUANTOS REGISTROS TEM AO TODO
+				conn.query(
+				'SELECT COUNT(id_pessoa) AS total FROM pessoas LIMIT 1',
+				(error, result_total, field)=>{
+					conn.release();
+					if(error){ return res.status(500).send({error: error});}
+					
+					let total = result_total[0].total;
+					let tot_pag = Math.ceil((total)/(pageOptions.limit));
+					const response = {
 					quantidade: result.length,
+					pagina: pageOptions.page,
+					limite: pageOptions.limit,
+					total_registros: total,
+					total_paginas: tot_pag,
 					pessoas: result.map(pe =>{
 						return{
 							id_pessoa: pe.id_pessoa,
@@ -28,6 +50,8 @@ exports.getPessoas = (req, res, next)=>{
 					})
 				};
 				return res.status(201).send(response);
+				});
+				
 			}
 		);
 	});
@@ -53,6 +77,9 @@ exports.getPessoaDetalhes = (req, res, next)=>{
 						id_pessoa: result[0].id_pessoa,
 						nome: result[0].nome, 
 						email: result[0].email,
+						sobre: result[0].sobre,
+						nascimento: result[0].nascimento,
+						telefone: result[0].telefone,
 						request: {
 								tipo: 'GET',
 								descricao: 'Retorna todos as pessoas',
@@ -73,8 +100,9 @@ exports.inserePessoa = (req, res, next)=>{
 		nome: req.body.nome,
 		email: req.body.email
 	};*/
+	console.log(req.body.nome);
 	//pegando o usuario logado
-	console.log(req.usuario)
+	 //console.log(req.usuario)
 	mysql.getConnection((error, conn)=>{
 		if(error){res.status(500).send({error: error});}//erro de conexao
 		conn.query(
@@ -110,9 +138,13 @@ exports.alteraPessoa = (req, res, next)=>{
 		if(error){res.status(500).send({error: error});}//erro de conexao
 		conn.query(
 			`UPDATE pessoas 
-				SET nome=?, email=? 
+				SET nome=?, 
+				email=?, 
+				sobre=?, 
+				telefone=?, 
+				nascimento=?
 				WHERE id_pessoa=?`,
-			[req.body.nome, req.body.email, req.body.id_pessoa],
+			[req.body.nome, req.body.email, req.body.sobre, req.body.telefone, req.body.nascimento, req.body.id_pessoa],
 			(error, result, field)=>{
 				conn.release(); //fechando conexao p nao travar
 				if(error){ return res.status(500).send({error: error});}
@@ -121,7 +153,10 @@ exports.alteraPessoa = (req, res, next)=>{
 					pessoa_alterada: {
 						id_pessoa: req.body.id_pessoa,
 						nome: req.body.nome, 
-						email: req.body.email
+						email: req.body.email,
+						sobre: req.body.sobre,
+						telefone: req.body.telefone,
+						nascimento: req.body.nascimento
 					},
 					request: {
 								tipo: 'GET',

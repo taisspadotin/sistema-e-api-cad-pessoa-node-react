@@ -14,8 +14,9 @@ app.use(bodyParser.json()); //json de entrada no body
 
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 	res.header(
-			'Access-Control-Allow-Header', 
+			'Access-Control-Allow-Header',
 			'Origin, X-Requested-With, Content-Type, Accept, Authorization'
 		);
 		if(req.method === 'OPTIONS'){

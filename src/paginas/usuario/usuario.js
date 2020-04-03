@@ -23,6 +23,9 @@ export default class Usuario extends Component{
 			console.log(error);
 		})
 	}
+	cadastrar(){
+		alert('teste');
+	}
 	render(){
 		let registroBanco = '';
 		if(this.state.registros.length === 0)
@@ -39,13 +42,15 @@ export default class Usuario extends Component{
 				<Table celled fixed singleLine className="tabela">
 				<Table.Header>
 				  <Table.Row>
-					<Table.HeaderCell>Nome</Table.HeaderCell>
+					<Table.HeaderCell>Usuário</Table.HeaderCell>
+					<Table.HeaderCell>Email</Table.HeaderCell>
 				  </Table.Row>
 				</Table.Header>
 				<Table.Body>
 				{this.state.registros.map((row)=>
 				  <Table.Row key={row.id_usuario}>
 					<Table.Cell>{row.usuario}</Table.Cell>
+					<Table.Cell>{row.email}</Table.Cell>
 					</Table.Row>
 				)}
 				</Table.Body>
@@ -81,29 +86,35 @@ export default class Usuario extends Component{
 									<input name='senhaValue' placeholder="*********" type='password' />
 								</Col>
 							</Row>
+							<Row className="mb-3">
+								<Col>
+									<label>Pessoa:</label>
+									<input name='pessoaValue' placeholder="Pessoa cadastrada" type='text' />
+								</Col>
+							</Row>
 							<br/>
 							<Row align="center">
 								<Col>
-									<Button animated className="botao" >
+									<Button animated type="button" className="botao" >
 									  <Button.Content visible>Novo</Button.Content>
 									  <Button.Content hidden>
 										<Icon name='add' />
 									  </Button.Content>
 									</Button>
-									<Button animated className="botao" >
+									<Button animated className="botao" type="button" onClick={()=>this.cadastrar()}>
 									  <Button.Content visible>Cadastrar</Button.Content>
 									  <Button.Content hidden>
 										<Icon name='arrow right' />
 									  </Button.Content>
 									</Button>
-									<Button animated className="botao" >
+									<Button animated className="botao" type="button">
 									  <Button.Content visible>Alterar</Button.Content>
 									  <Button.Content hidden>
 										<Icon name='pencil' />
 									  </Button.Content>
 									</Button>
 									 <Popup content='Deletar registro' trigger={
-										 <Button animated className="botao" >
+										 <Button animated className="botao" type="button">
 										  <Button.Content visible>Deletar</Button.Content>
 										  <Button.Content hidden>
 											<Icon name='trash alternate' />

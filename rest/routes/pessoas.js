@@ -8,13 +8,14 @@ const pessoasController = require('../controllers/pessoas-controller');//para o 
 router.get('/', pessoasController.getPessoas);
 
 //INSERE PESSOA
-router.post('/', login.obrigatorio, pessoasController.inserePessoa);
+//router.post('/', login.obrigatorio, pessoasController.inserePessoa);
+router.post('/', pessoasController.inserePessoa);
 
 //BUSCA UMA PESSOA
 router.get('/:id_pessoa', pessoasController.getPessoaDetalhes);
 
 //ALTERA UMA PESSOA
-router.patch('/', pessoasController.alteraPessoa);
+router.put('/', pessoasController.alteraPessoa);
 
 //DELETA PESSOA
 router.delete('/:id_pessoa', pessoasController.deletaPessoa);

@@ -90,6 +90,33 @@ body{
 	}
 	
 }
+.paginacao{
+	width: auto;
+	position: relative;
+	a{
+		&:hover{
+			background: rgba($cor1, .5) !important;
+		}
+	}
+	.active{
+		background: rgba($cor1, .3) !important;
+	}
+}
+.ac-input{
+	input{
+		border: 1px solid #8d8d8d50 !important;
+		background: #dadada20 !important;
+		width: 100%;
+		height: 35px !important;
+		border-radius: 5px !important;
+		padding-right: 10px !important;
+		padding-left: 10px !important;
+		padding-top: 10px !important;
+		padding-bottom: 10px !important;
+		@include font-body;
+		color: $cor1 !important;
+	}
+}
 .botao{
 	margin-top: 1px !important;
 	width: 150px;

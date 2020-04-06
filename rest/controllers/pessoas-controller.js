@@ -12,7 +12,7 @@ exports.getPessoas = (req, res, next)=>{
 	mysql.getConnection((error, conn)=>{
 		if(error){res.status(500).send({error: error});}//erro de conexao
 		conn.query(
-			'SELECT SQL_CALC_FOUND_ROWS *, FOUND_ROWS() AS fr FROM pessoas limit ?,?',
+			'SELECT SQL_CALC_FOUND_ROWS *, FOUND_ROWS() AS fr FROM pessoas order by id_pessoa desc limit ?,?',
 			[inicio_busca, pageOptions.limit],
 			(error, result, field)=>{
 				if(error){ return res.status(500).send({error: error});}
@@ -36,11 +36,11 @@ exports.getPessoas = (req, res, next)=>{
 					pessoas: result.map(pe =>{
 						return{
 							id_pessoa: pe.id_pessoa,
-							nome: pe.nome,
-							email: pe.email,
-							sobre: pe.sobre,
-							telefone: pe.telefone,
-							nascimento: pe.nascimento,
+							nome: pe.nome === null ? '': pe.nome,
+							email: pe.email === null ? '': pe.email,
+							sobre: pe.sobre === null ? '': pe.sobre,
+							telefone: pe.telefone === null ? '': pe.telefone,
+							nascimento: pe.nascimento === null ? '': pe.nascimento,
 							request: {
 								tipo: 'GET',
 								descricao: 'Retorna todos os detalhes de uma pessoa',
@@ -75,11 +75,11 @@ exports.getPessoaDetalhes = (req, res, next)=>{
 				const response = {
 					pessoa: {
 						id_pessoa: result[0].id_pessoa,
-						nome: result[0].nome, 
-						email: result[0].email,
-						sobre: result[0].sobre,
-						nascimento: result[0].nascimento,
-						telefone: result[0].telefone,
+						nome: result[0].nome === null ? '': result[0].nome, 
+						email: result[0].email === null ? '': result[0].email,
+						sobre: result[0].sobre === null ? '': result[0].sobre,
+						nascimento: result[0].nascimento === null ? '': result[0].nascimento,
+						telefone: result[0].telefone === null ? '': result[0].telefone,
 						request: {
 								tipo: 'GET',
 								descricao: 'Retorna todos as pessoas',
@@ -116,7 +116,7 @@ exports.inserePessoa = (req, res, next)=>{
 					pessoa_criada: {
 						id_pessoa: result.insertId,
 						nome: req.body.nome, 
-						email: req.body.email
+						email: req.body.email === null ? '': req.body.email
 					},
 					request: {
 								tipo: 'GET',
@@ -134,6 +134,7 @@ exports.inserePessoa = (req, res, next)=>{
 
 
 exports.alteraPessoa = (req, res, next)=>{
+	//req.body.id_pessoa
 	mysql.getConnection((error, conn)=>{
 		if(error){res.status(500).send({error: error});}//erro de conexao
 		conn.query(
@@ -144,24 +145,24 @@ exports.alteraPessoa = (req, res, next)=>{
 				telefone=?, 
 				nascimento=?
 				WHERE id_pessoa=?`,
-			[req.body.nome, req.body.email, req.body.sobre, req.body.telefone, req.body.nascimento, req.body.id_pessoa],
+			[req.body.nome, req.body.email, req.body.sobre, req.body.telefone, req.body.nascimento, req.params.id_pessoa],
 			(error, result, field)=>{
 				conn.release(); //fechando conexao p nao travar
 				if(error){ return res.status(500).send({error: error});}
 				const response = {
 					mensagem: 'Pessoa alterada com sucesso!',
 					pessoa_alterada: {
-						id_pessoa: req.body.id_pessoa,
-						nome: req.body.nome, 
-						email: req.body.email,
-						sobre: req.body.sobre,
-						telefone: req.body.telefone,
-						nascimento: req.body.nascimento
+						id_pessoa: req.params.id_pessoa,
+						nome: req.body.nome === null ? '': req.body.nome, 
+						email: req.body.email === null ? '': req.body.email,
+						sobre: req.body.sobre === null ? '': req.body.sobre,
+						telefone: req.body.telefone === null ? '': req.body.telefone,
+						nascimento: req.body.nascimento === null ? '': req.body.nascimento
 					},
 					request: {
 								tipo: 'GET',
 								descricao: 'Retorna uma pessoa',
-								url: 'http://localhost:3020/pessoas/'+req.body.id_pessoa
+								url: 'http://localhost:3020/pessoas/'+req.params.id_pessoa
 							}
 					
 				};
@@ -196,5 +197,35 @@ exports.deletaPessoa = (req, res, next)=>{
 				return res.status(202).send(response);
 			}
 		);
+	});
+};
+
+
+exports.autocompletePessoa = (req, res, next)=>{
+    const nome_pessoa = req.query.nome_pessoa;
+	mysql.getConnection((error, conn)=>{
+		if(error){res.status(500).send({error: error});}//erro de conexao
+		conn.query(
+			'SELECT * FROM pessoas WHERE nome LIKE ?',
+			['%'+nome_pessoa+'%'],
+			(error, result, field)=>{
+				if(error){ return res.status(500).send({error: error});}
+				conn.release();
+					if(error){ return res.status(500).send({error: error});}
+					const response = {
+						quantidade: result.length,
+						pessoas: result.map(pe =>{
+							return{
+								id_pessoa: pe.id_pessoa,
+								nome: pe.nome === null ? '': pe.nome,
+								email: pe.email === null ? '': pe.email
+							}
+						
+						})
+					}
+			 return res.status(201).send(response);
+			}	
+		);
+			
 	});
 };

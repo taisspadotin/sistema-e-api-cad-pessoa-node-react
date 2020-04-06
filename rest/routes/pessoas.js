@@ -4,6 +4,10 @@ const mysql = require('../mysql').pool;
 const login = require('../middleware/login');//para proteger a rota
 const pessoasController = require('../controllers/pessoas-controller');//para o controller
 
+
+//BUSCA UMA PESSOA PARA AUTOCOMPLETE
+router.get('/auto_pessoa', pessoasController.autocompletePessoa);
+
 //TODAS AS PESSOAS
 router.get('/', pessoasController.getPessoas);
 
@@ -15,7 +19,7 @@ router.post('/', pessoasController.inserePessoa);
 router.get('/:id_pessoa', pessoasController.getPessoaDetalhes);
 
 //ALTERA UMA PESSOA
-router.put('/', pessoasController.alteraPessoa);
+router.patch('/:id_pessoa', pessoasController.alteraPessoa);
 
 //DELETA PESSOA
 router.delete('/:id_pessoa', pessoasController.deletaPessoa);

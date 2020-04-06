@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import './style-login.scss';
 import axios from 'axios';
+import { realizaLogin, logout } from "../../services/auth";
 
 class Login extends Component{
 	
@@ -22,7 +23,8 @@ class Login extends Component{
 			if(resp.data.codigo === 1){
 				alert(resp.data.mensagem);
 				//salvar no localstorage o token
-				localStorage.setItem('token', resp.data.token);
+				//localStorage.setItem('token', resp.data.token);
+				realizaLogin(resp.data.token);
 				window.location.href = "/";
 			}
 			else{
@@ -44,6 +46,9 @@ class Login extends Component{
        [nome]: event.target.value
      })
     } 
+	logout_sistema = () => {
+		logout();
+	}
 	render(){
 		const {emailValue, senhaValue} = this.state;
 		return(
@@ -60,7 +65,7 @@ class Login extends Component{
 							<br/>
 							<p>Forgot <a href="/">User name / password </a>?</p>
 							<br/>
-							<h5>SING OUT</h5>
+							<h5 onClick={()=>this.logout_sistema()}>SING OUT</h5>
 						</div>	
 						
 					</div>

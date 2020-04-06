@@ -81,29 +81,109 @@ exports.loginUsuario = (req, res, next)=>{
 };
 
 exports.getUsuarios = (req, res, next)=>{
+	const pageOptions = {
+		page: parseInt(req.query.page, 10) || 0,
+		limit: parseInt(req.query.limit, 10) || 10
+	}
+	let inicio_busca = ((pageOptions.page)*(pageOptions.limit));
+	
 	mysql.getConnection((error, conn)=>{
 		if(error){res.status(500).send({error: error});}//erro de conexao
-		 conn.query(`SELECT * FROM usuarios`, (error, results)=>{
+		 conn.query(`SELECT * FROM usuarios limit ?,?`,
+		 [inicio_busca, pageOptions.limit],
+		 (error, results)=>{
 			if(error){return res.status(500).send({error: error});}
-				conn.release();
+				//conn.release();
+				conn.query(
+				'SELECT COUNT(id_usuario) AS total FROM usuarios LIMIT 1',
+				(error, result_total, field)=>{
+					conn.release();
+					if(error){ return res.status(500).send({error: error});}
+					
+					let total = result_total[0].total;
+					let tot_pag = Math.ceil((total)/(pageOptions.limit));
+					
 					const response = {
 							quantidade: results.length,
-					usuarios: results.map(row =>{
-						return{
-							id_usuario: row.id_usuario,
-							usuario: row.usuario,
-							email: row.email,
-							request: {
-								tipo: 'GET'
+							pagina: pageOptions.page,
+							limite: pageOptions.limit,
+							total_registros: total,
+							total_paginas: tot_pag,
+							usuarios: results.map(row =>{
+							return{
+								id_usuario: row.id_usuario,
+								usuario: row.usuario === null ? '': row.usuario,
+								email: row.email === null ? '': row.email,
+								request: {
+									tipo: 'GET'
+								}
 							}
-						}
-					})
+						})
 					};
-						console.log(response);
-						return res.status(201).send(response);
 					
+					console.log(response);
+					return res.status(201).send(response);
+				});
 			
 		});
 		
 	});
+};
+
+
+exports.getUsuarioDetalhes = (req, res, next)=>{
+	mysql.getConnection((error, conn)=>{
+		if(error){res.status(500).send({error: error});}//erro de conexao
+		conn.query(
+			'SELECT * FROM usuarios WHERE id_usuario = ?',
+			[req.params.id_usuario],
+			(error, result, field)=>{
+				conn.release(); 
+				if(error){ return res.status(500).send({error: error});}
+				if(result.length === 0){
+					return res.status(404).send({
+					mensagem: 'Nenhum usuário com esse id encontrado'
+				});
+				}
+				const response = {
+					usuario: {
+						id_usuarios: result[0].id_usuario,
+						usuario: result[0].usuario === null ? '' : result[0].usuario, 
+						email: result[0].email === null ? '' : result[0].email
+					}			
+						
+				};
+				return res.status(201).send(response);
+			}
+		);
+	});
+	
+};
+
+exports.alteraUsuario = (req, res, next)=>{
+	mysql.getConnection((error, conn)=>{
+		if(error){res.status(500).send({error: error});}//erro de conexao
+		conn.query(
+			`UPDATE usuarios SET
+				usuario = ?,
+				email = ?
+			WHERE id_usuario = ?`,
+			[req.body.usuario, req.body.email, req.params.id_usuario],
+			(error, result, field)=>{
+				conn.release(); 
+				if(error){ return res.status(500).send({error: error});}
+				const response = {
+					mensagem: 'Usuario alterado com sucesso!',
+					usuarioCriado: {
+						id_usuario: req.params.id_usuario,
+						usuario: req.body.usuario, 
+						email: req.body.email
+					}			
+						
+				};
+				return res.status(201).send(response);
+			}
+		);
+	});
+	
 };

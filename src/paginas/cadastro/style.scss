@@ -48,15 +48,7 @@ fieldset{
 }
 
 
-.paginacao{
-	width: auto;
-	position: relative;
-	a{
-		&:hover{
-			background: lighten($corFocus, 30) !important;
-		}
-	}
-}
+
 /*
 .titulo{
 	margin-bottom: 20px;
